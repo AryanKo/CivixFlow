@@ -5,8 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "serve .",
-    "start": "serve .",
-    "build": "echo 'CivixFlow is ready for deployment'"
+    "start": "serve ."
   },
   "keywords": [
     "traffic-simulation",
