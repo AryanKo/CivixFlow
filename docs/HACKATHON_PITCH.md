@@ -1,7 +1,8 @@
 # 🏆 AI Traffic Command Center — Hackathon Pitch & Judge Guide
 
 > **Theme**: AI-driven solution for traffic management  
-> **Project**: AI Traffic Command Center  
+> **Project**: CivixFlow - AI Traffic Command Center  
+> **Presenter & Author**: Aryan (<kotwal.aryan01@gmail.com>)  
 > **Platform**: Real-time Web Simulation & Smart City Dashboard
 
 ---

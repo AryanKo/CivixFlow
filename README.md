@@ -1,12 +1,14 @@
-# 🚦 CivixFlow- AI Traffic Command Center
+# 🚦 CivixFlow - AI Traffic Command Center
 
 [![Live Simulation](https://img.shields.io/badge/Live_Simulation-60_FPS-cyan.svg)](#)
 [![AI Control](https://img.shields.io/badge/AI_Engine-Max--Pressure_%2B_Webster-emerald.svg)](#)
 [![Explainable AI](https://img.shields.io/badge/XAI-Natural_Language_Rationale-indigo.svg)](#)
 [![Emergency Preemption](https://img.shields.io/badge/Emergency-IEEE_1570_Corridor-red.svg)](#)
+[![Vercel Ready](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)](#)
 
 > **Theme**: AI-driven solution for traffic management  
-> **Project**: AI Traffic Command Center  
+> **Project**: CivixFlow AI Traffic Command Center  
+> **Author**: Aryan (<kotwal.aryan01@gmail.com>)  
 > **A realistic, real-time traffic management dashboard and multi-intersection simulation demonstrating how AI analyzes traffic conditions, predicts bottlenecks, and recommends adaptive signal decisions.**
 
 ---
@@ -46,32 +48,47 @@
 
 ---
 
-## 🚀 Quick Start & How to Run
+## 🚀 Quick Start & Deployment
 
-Because the project is built with modern ES6+ modules and standard web technologies (HTML5, Tailwind CSS, Chart.js, Lucide Icons, Canvas API), **no build step, compilation, or package manager installation is required!**
+Built with modern ES6+ modules and standard web standards (HTML5, Tailwind CSS, Chart.js, Lucide Icons, Canvas API).
 
-### Option A: Open directly in your browser
+### ☁️ Deploy to Vercel (Instant)
+This project is configured out-of-the-box for instant zero-configuration Vercel deployment:
+1. Push this repository to GitHub.
+2. Import the repository into your [Vercel Dashboard](https://vercel.com).
+3. Click **Deploy**. Vercel will automatically detect `index.html` and configure the routing and caching headers specified in `vercel.json`.
+
+Or deploy via Vercel CLI:
+```bash
+npx vercel
+```
+
+### 💻 Local Run Options
+
+#### Option A: Open directly in your browser
 Simply double-click or open `index.html` in any modern web browser (Chrome, Edge, Firefox, Safari).
 
-### Option B: Run with any local static HTTP server
-If you prefer running via a local server:
+#### Option B: Run with local HTTP server
 ```bash
-# Using Python (if available):
-python -m http.server 8000
+# Using npm:
+npm start
 
-# Using npx (if Node.js is installed):
-npx serve .
+# Or using Python:
+python -m http.server 8000
 ```
-Then navigate to `http://localhost:8000`.
+Then navigate to `http://localhost:8000` or `http://localhost:3000`.
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-nxs-promptwars-build/
+CivixFlow/
 ├── index.html                  # Main Single Page Application dashboard
 ├── README.md                   # Project documentation & overview
+├── vercel.json                 # Vercel Edge routing & cache header configuration
+├── package.json                # Project manifest & npm scripts
+├── .gitignore                  # Git ignore rules
 ├── assets/
 │   └── css/
 │       └── style.css           # Cyberpunk dark theme, glassmorphism, animations
@@ -108,8 +125,17 @@ nxs-promptwars-build/
 - **AI Auto-Pilot Switch**: Toggle between AI Adaptive signal control and Legacy Fixed-Timer baseline to see the dramatic difference in wait times.
 - **Scenario Preset Dropdown**: Switch between *Standard Normal Traffic*, *Morning Rush Hour Surge*, *Code Red: Emergency Rush*, *Lane Bottleneck*, and *Storm Weather*.
 - **Operator Overrides**: Manually force North-South or East-West green to test manual operator interventions.
+- **Emergency Dispatch Buttons**: Dispatch Ambulance, Fire Engine, or Police Cruiser to test IEEE 1570 green corridor preemption.
 
 ---
 
-## 🏆 Hackathon Pitch & Judge Walkthrough
-For the complete 3-minute presentation script and judging talking points, see [docs/HACKATHON_PITCH.md](docs/HACKATHON_PITCH.md).
+## 👤 Author & Maintainer
+
+**Aryan**
+- **Email**: [kotwal.aryan01@gmail.com](mailto:kotwal.aryan01@gmail.com)
+- **GitHub**: [@AryanKo](https://github.com/AryanKo)
+
+---
+
+## 📄 License
+MIT License

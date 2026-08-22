@@ -1,0 +1,30 @@
+{
+  "name": "civixflow",
+  "version": "1.0.0",
+  "description": "CivixFlow - Autonomous AI Traffic Command Center & Smart City Signal Orchestration",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve .",
+    "start": "serve .",
+    "build": "echo 'CivixFlow is ready for deployment'"
+  },
+  "keywords": [
+    "traffic-simulation",
+    "autonomous-signals",
+    "smart-city",
+    "explainable-ai",
+    "xai",
+    "traffic-management",
+    "canvas",
+    "charts"
+  ],
+  "author": "Aryan <kotwal.aryan01@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AryanKo/CivixFlow.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
