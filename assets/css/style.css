@@ -2,7 +2,6 @@
  * AI Traffic Command Center - Custom Styles & Cyber Dark Theme
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
   --bg-main: #060911;
@@ -135,3 +134,21 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(20px);
 }
+.local-panel { padding: 14px 22px; background:#0c1322; border-bottom:1px solid #334155; font-size:12px; line-height:1.8; }
+.local-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.local-panel strong { color:#67e8f9; font-size:15px; }
+.local-panel summary { cursor:pointer; color:#cbd5e1; margin-top:8px; }
+.local-panel p { color:#94a3b8; }
+.local-panel input,.local-panel select,.local-panel button { background:#152138; border:1px solid #475569; border-radius:6px; padding:4px 8px; color:#e2e8f0; }
+.local-panel input { width:130px; } .local-panel button { cursor:pointer; }
+.sim-badge { border:1px solid #155e75; color:#67e8f9; padding:1px 8px; border-radius:5px; font-size:10px; letter-spacing:.1em; }
+#renderStats { font-variant-numeric:tabular-nums; color:#94a3b8; }
+main > section { min-width:0; }
+main > section:nth-child(2) > div:first-child { flex-wrap:wrap; gap:8px; }
+#activeNodeDesc { max-width:100%; white-space:normal; }
+#aiStatusBadge { font-size:10px; }
+/* Keep global controls and node badges inside narrow viewports. */
+header > div:last-child { flex-wrap:wrap; min-width:0; }
+main > section:nth-child(2) > div:first-child > div { min-width:0; flex-wrap:wrap; }
+fieldset:disabled { opacity:.45; }
+@media (max-width:600px) { .local-panel { padding:12px; } #mlDecision,#mlRates { overflow-wrap:anywhere; } }

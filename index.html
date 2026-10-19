@@ -16,36 +16,32 @@
   <!-- Inline SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23060911'/><circle cx='50' cy='30' r='14' fill='%23ef4444'/><circle cx='50' cy='50' r='14' fill='%23f59e0b'/><circle cx='50' cy='70' r='14' fill='%2310b981'/></svg>" />
   
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            cyber: {
-              900: '#060911',
-              800: '#0c1322',
-              700: '#152138',
-              accent: '#06b6d4',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <link rel="stylesheet" href="assets/vendor/tailwind.css" />
+  <script src="assets/vendor/lucide.js"></script>
+  <script src="assets/vendor/chart.umd.js"></script>
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body class="bg-cyber-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
 
+  <section class="local-panel" aria-label="Local backend and hardware connection">
+    <div class="local-row"><strong>CivixFlow</strong><span class="sim-badge">SIMULATED TRAFFIC</span><span id="renderStats">Starting renderer</span></div>
+    <p id="mlStatus" role="status">Frontend preview · local adaptive simulation · backend disconnected</p>
+    <p id="mlDecision">Cars and signal decisions run locally. Backend ML is not connected.</p><p id="mlRates"></p>
+    <details><summary>Backend integration (optional; requires the actual backend)</summary>
+      <p>The merge agent must adapt this optional connection panel to your real backend. The preview ships with all network requests disabled. See INTEGRATION_HANDOFF.md for contracts and mapping.</p>
+      <label><input type="checkbox" id="backendEnabled"> Enable backend adapter after integration</label><fieldset id="backendControls" disabled><form id="connectionForm" class="local-row">
+        <label>Transport <select name="transport" aria-label="Transport"><option value="tcp">Hotspot TCP</option><option value="serial">USB serial</option></select></label>
+        <label>Device IP <input name="host" placeholder="192.168.43.100" aria-label="Device IP"></label>
+        <label>TCP port <input name="port" type="number" min="1" max="65535" value="9000" aria-label="TCP port"></label>
+        <label>Serial port <input name="serial_port" list="serialPorts" placeholder="COM3" aria-label="Serial port"></label><datalist id="serialPorts"></datalist>
+        <label>Baud <input name="baud" type="number" value="115200" aria-label="Baud rate"></label>
+        <button type="submit">Connect</button><button type="button" id="refreshPorts">Find USB ports</button><button type="button" id="disconnectHardware">Disconnect</button>
+      </form></fieldset>
+      <p id="hardwareStatus" role="status">Hardware disconnected</p><p id="hardwareCounts">No measurements received</p><p id="hardwareBrain">Hardware ML waiting for telemetry</p>
+      <p>Cars and charts below are simulated. Road A groups N/S, Road B groups E/W in the simulation; hardware A/B are the two physical lanes. Browser controls affect the simulation only.</p>
+    </details>
+  </section>
   <!-- ================= TOP HEADER BAR ================= -->
   <header class="border-b border-slate-800/80 bg-cyber-800/90 backdrop-blur-md sticky top-0 z-40 px-4 py-2.5 flex flex-wrap items-center justify-between gap-4 shadow-xl">
     
@@ -61,7 +57,7 @@
             <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-700">v4.2</span>
           </h1>
         </div>
-        <p class="text-[11px] text-slate-400 font-medium">Autonomous Smart Signal Orchestration & Emergency Preemption</p>
+        <p class="text-[11px] text-slate-400 font-medium">Simulated traffic · local ML planner · separate hardware telemetry</p>
       </div>
     </div>
 
@@ -351,7 +347,7 @@
       <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
       <span class="text-slate-300">CivixFlow Autonomous Command Engine</span>
       <span class="text-slate-600">•</span>
-      <span class="text-cyan-400">Vercel Edge Ready</span>
+      <span class="text-cyan-400">Local frontend preview</span>
     </div>
     <div class="flex items-center gap-4 text-[11px]">
       <span>Engineered & Developed by <strong class="text-cyan-400 font-semibold">Aryan</strong></span>

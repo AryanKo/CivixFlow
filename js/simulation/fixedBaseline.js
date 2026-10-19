@@ -6,6 +6,7 @@
 
 export class FixedBaselineTwin {
   constructor() {
+    this.simTime = 0;
     this.phaseIndex = 0; // 0=NS_GREEN, 1=NS_YELLOW, 2=ALL_RED, 3=EW_GREEN, 4=EW_YELLOW, 5=ALL_RED
     this.phaseTimer = 0;
 
@@ -36,6 +37,7 @@ export class FixedBaselineTwin {
    */
   update(dt) {
     // 1. Advance Fixed Phase Timer
+    this.simTime += dt;
     this.phaseTimer += dt;
     if (this.phaseTimer >= this.phaseDurations[this.phaseIndex]) {
       this.phaseTimer = 0;
@@ -77,7 +79,7 @@ export class FixedBaselineTwin {
               if (this.completedWaitTimes.length > 50) {
                 this.completedWaitTimes.shift();
               }
-              this.recentDepartures.push(Date.now());
+              this.recentDepartures.push((this.simTime * 1000));
             }
           }
         } else {
@@ -87,7 +89,7 @@ export class FixedBaselineTwin {
     });
 
     // Prune old departures > 60s
-    const cutoff = Date.now() - 60000;
+    const cutoff = (this.simTime * 1000) - 60000;
     this.recentDepartures = this.recentDepartures.filter((t) => t > cutoff);
   }
 
@@ -99,7 +101,7 @@ export class FixedBaselineTwin {
       this.queues[vehicle.approach].push({
         id: vehicle.id,
         approach: vehicle.approach,
-        spawnTime: Date.now(),
+        spawnTime: (this.simTime * 1000),
         waitTime: 0,
         isEmergency: vehicle.isEmergency,
       });
@@ -140,7 +142,7 @@ export class FixedBaselineTwin {
       count += this.completedWaitTimes.length;
     }
 
-    return count > 0 ? Number((totalWait / count).toFixed(1)) : 12.0;
+    return count > 0 ? Number((totalWait / count).toFixed(1)) : 0;
   }
 
   getTotalQueuedCount() {

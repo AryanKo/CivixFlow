@@ -5,7 +5,6 @@ desktop.ini
 
 # Dependencies & Package Managers
 node_modules/
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
@@ -36,3 +35,8 @@ yarn-error.log*
 
 # Temporary & Scratch Files
 scratch/
+
+.venv/
+__pycache__/
+*.pyc
+release/

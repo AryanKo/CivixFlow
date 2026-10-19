@@ -13,13 +13,17 @@ export class CanvasRenderer {
     this.width = canvas.width;
     this.height = canvas.height;
     this.radarAngle = 0;
+    this.vehicleSprites = new Map();
   }
 
   resize() {
     const rect = this.canvas.parentElement.getBoundingClientRect();
     const size = Math.min(rect.width, 800);
-    this.canvas.width = size;
-    this.canvas.height = size;
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.canvas.width = Math.round(size * this.dpr);
+    this.canvas.height = Math.round(size * this.dpr);
+    this.canvas.style.width = `${size}px`;
+    this.canvas.style.height = `${size}px`;
     this.width = size;
     this.height = size;
   }
@@ -27,11 +31,12 @@ export class CanvasRenderer {
   /**
    * Main render frame
    */
-  render(intersection, vehicles, isAiMode, activeEmergency) {
+  render(intersection, vehicles, isAiMode, activeEmergency, alpha = 1) {
     const ctx = this.ctx;
     const w = this.width;
     const h = this.height;
 
+    ctx.setTransform(this.dpr || 1, 0, 0, this.dpr || 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
     // Scaling factor if canvas is resized
@@ -40,16 +45,31 @@ export class CanvasRenderer {
     ctx.scale(scale, scale);
 
     // 1. Draw Background Grid & Terrain
-    this.drawBackground(ctx);
-
-    // 2. Draw Road Geometry, Markings & Crosswalks
-    this.drawRoads(ctx, intersection);
+    if (!this.roadLayer || this.roadWidth !== intersection.roadWidth) {
+      this.roadLayer = document.createElement('canvas');
+      this.roadLayer.width = this.roadLayer.height = 1600;
+      const roadContext = this.roadLayer.getContext('2d');
+      roadContext.scale(2, 2);
+      this.drawBackground(roadContext);
+      this.drawRoads(roadContext, intersection);
+      this.roadWidth = intersection.roadWidth;
+    }
+    ctx.drawImage(this.roadLayer, 0, 0, 800, 800);
 
     // 3. Draw Queue Heatmaps & Sensor Detection Zones
     this.drawSensorOverlays(ctx, intersection);
 
     // 4. Draw Vehicles with Lights & Strobes
+    const positions = vehicles.map(v => [v.x, v.y, v.angle]);
+    for (const v of vehicles) {
+      v.x = (v.previousX ?? v.x) + (v.x - (v.previousX ?? v.x)) * alpha;
+      v.y = (v.previousY ?? v.y) + (v.y - (v.previousY ?? v.y)) * alpha;
+      const from = v.previousAngle ?? v.angle;
+      const delta = Math.atan2(Math.sin(v.angle - from), Math.cos(v.angle - from));
+      v.angle = from + delta * alpha;
+    }
     this.drawVehicles(ctx, intersection, vehicles);
+    vehicles.forEach((v, i) => { [v.x, v.y, v.angle] = positions[i]; });
 
     // 5. Draw Traffic Signal Fixtures & Glow
     this.drawTrafficLights(ctx, intersection);
@@ -285,6 +305,34 @@ export class CanvasRenderer {
   }
 
   drawVehicles(ctx, intersection, vehicles) {
+    // Cache the expensive shadows/gradients once per vehicle appearance.
+    for (const vehicle of vehicles) {
+      if (vehicle.intersectionId !== intersection.id) continue;
+      if (vehicle.isEmergency) {
+        this.drawVehicleShapes(ctx, intersection, [vehicle]);
+        continue;
+      }
+      const braking = vehicle.isBraking || vehicle.speed < 0.3;
+      const key = `${vehicle.typeKey}:${vehicle.color}:${braking}`;
+      let sprite = this.vehicleSprites.get(key);
+      const width = vehicle.spec.length + 85, height = 80;
+      const origin = vehicle.spec.length / 2 + 16;
+      if (!sprite) {
+        sprite = document.createElement('canvas');
+        sprite.width = width * 2; sprite.height = height * 2;
+        const spriteContext = sprite.getContext('2d');
+        spriteContext.scale(2, 2);
+        this.drawVehicleShapes(spriteContext, intersection, [{...vehicle, x:origin, y:40, angle:0}]);
+        this.vehicleSprites.set(key, sprite);
+      }
+      ctx.save();
+      ctx.translate(vehicle.x, vehicle.y); ctx.rotate(vehicle.angle);
+      ctx.drawImage(sprite, -origin, -40, width, height);
+      ctx.restore();
+    }
+  }
+
+  drawVehicleShapes(ctx, intersection, vehicles) {
     vehicles.forEach((veh) => {
       if (intersection && veh.intersectionId !== intersection.id) return;
 
