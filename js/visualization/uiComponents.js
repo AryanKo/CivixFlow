@@ -344,6 +344,9 @@ export class UIComponents {
     if (!feed) return;
 
     const timeStr = dec.timestamp.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // Future backend decisions are data, not markup.
+    const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    dec = {...dec, ...Object.fromEntries(['action','primaryReason','impact','tradeOff','confidence','rule'].map(key => [key, escape(dec[key])]))};
 
     let borderClass = 'border-cyan-500/40 bg-slate-900/80';
     let badgeClass = 'bg-cyan-950 text-cyan-400 border-cyan-700';

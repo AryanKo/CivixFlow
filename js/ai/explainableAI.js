@@ -5,6 +5,7 @@
  */
 
 import { MathUtils } from '../utils/mathUtils.js';
+import { CONFIG } from '../config.js';
 
 export class ExplainableAI {
   /**

@@ -79,7 +79,7 @@ export class Vehicle {
       : 'GREEN';
 
     let mustStop = false;
-    if (this.state === 'APPROACHING' && !this.hasCrossedStopLine) {
+    if ((this.state === 'APPROACHING' || this.state === 'QUEUED') && !this.hasCrossedStopLine) {
       if (distToStop <= 2) {
         this.hasCrossedStopLine = true;
         this.state = 'CROSSING';
@@ -121,7 +121,7 @@ export class Vehicle {
     }
 
     // Emergency vehicles ignore red lights (they have preemption)
-    if (this.isEmergency) targetSpeed = desiredSpeed;
+    // Emergency traffic obeys the preempted signal and the vehicle ahead.
 
     // Crossing turn speed cap
     if (this.state === 'CROSSING' && this.turnPath && this.turnIntent !== 'STRAIGHT') {
@@ -160,6 +160,8 @@ export class Vehicle {
       if (this.turnProgress >= 1.0) {
         this.turnProgress = 1.0;
         this.state = 'EXITED';
+        this.x = this.turnPath.p2.x;
+        this.y = this.turnPath.p2.y;
         this.angle = this.turnPath.endAngle;
       } else {
         const pt = MathUtils.bezierPoint(

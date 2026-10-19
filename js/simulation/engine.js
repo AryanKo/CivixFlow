@@ -19,10 +19,12 @@ export class SimulationEngine {
     this.safety    = new SafetyAnalytics();
 
     this.telemetryTimer = 0;
+    this.safetyTimer = 0;
     this.spawnTimers    = { N: 0, S: 0, E: 0, W: 0 };
     this.isRunning      = true;
     this.speedMultiplier = CONFIG.SIMULATION.DEFAULT_SPEED;
 
+    this.simTime = 0;
     this.totalSpawned   = 0;
     this.totalCompleted = 0;
     this.totalWaitTime  = 0;
@@ -37,6 +39,7 @@ export class SimulationEngine {
     this.speedMultiplier = state.simulationSpeed || 1.0;
     if (!this.isRunning) return;
 
+    this.simTime += dt;
     this.network.update(dt, state.isAiMode);
     this.fixedTwin.update(dt);
     this._spawnTraffic(dt, state.currentPreset);
@@ -47,7 +50,11 @@ export class SimulationEngine {
     });
 
     // Safety detection every frame
-    try { this.safety.update(this.vehicles); } catch (e) {}
+    this.safetyTimer += dt;
+    if (this.safetyTimer >= 0.1) {
+      this.safetyTimer -= 0.1;
+      this.safety.update(this.vehicles);
+    }
 
     // Telemetry snapshot every 1.5 s
     this.telemetryTimer += dt;
@@ -161,7 +168,7 @@ export class SimulationEngine {
     );
 
     const remaining = [];
-    const now = Date.now();
+    const now = this.simTime * 1000;
 
     for (let i = 0; i < this.vehicles.length; i++) {
       const v    = this.vehicles[i];
@@ -207,9 +214,9 @@ export class SimulationEngine {
     let waitSum = 0, waitCnt = 0;
     this.vehicles.forEach(v => { waitSum += v.waitTime; waitCnt++; });
     this.completedVehicles.forEach(c => { waitSum += c.waitTime; waitCnt++; });
-    const liveWait = waitCnt > 0 ? waitSum / waitCnt : 8.0;
+    const liveWait = waitCnt > 0 ? waitSum / waitCnt : 0;
     const fixedWait = this.fixedTwin.getAverageWaitTime();
-    const avgWaitAI    = isAiMode ? liveWait : Math.max(4, liveWait * 0.6);
+    const avgWaitAI    = liveWait;
     const avgWaitFixed = isAiMode ? fixedWait : liveWait;
 
     // Congestion
@@ -218,9 +225,7 @@ export class SimulationEngine {
     const congestion = Math.min(100, Math.round((queuedCount / 36) * 100));
 
     // Throughput
-    const throughput = Math.max(15, Math.min(120,
-      Math.round(this.recentDepartures.length * 2 + (active > 5 ? 18 : 6))
-    ));
+    const throughput = this.recentDepartures.length;
 
     // CO2
     const idleSaved = Math.max(0, this.fixedTwin.totalIdleSeconds - this.totalIdleSec);
@@ -263,7 +268,7 @@ export class SimulationEngine {
       avgWaitTimeAI:    Number(avgWaitAI.toFixed(1)),
       avgWaitTimeFixed: Number(avgWaitFixed.toFixed(1)),
       congestion,
-      throughput: Math.max(15, throughput),
+      throughput,
       co2SavedKg: Number(co2Saved.toFixed(1)),
       activeVehicles: active,
       totalSpawned:   this.totalSpawned,

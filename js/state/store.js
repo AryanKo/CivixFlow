@@ -11,7 +11,7 @@ class StateStore {
       isRunning: true,
       simulationSpeed: CONFIG.SIMULATION.DEFAULT_SPEED,
       isAiMode: true, // True = AI Adaptive Controller, False = Static Fixed Timers
-      currentPreset: 'preset-balanced',
+      currentPreset: 'BALANCED',
       activeIntersectionId: 'int-downtown',
       selectedApproach: null, // For manual inspection
       audioMuted: false,

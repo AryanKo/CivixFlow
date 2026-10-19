@@ -1,11 +1,14 @@
 {
   "name": "civixflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CivixFlow - Autonomous AI Traffic Command Center & Smart City Signal Orchestration",
   "main": "index.html",
   "scripts": {
-    "dev": "serve .",
-    "start": "serve ."
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build-assets.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "package": "python scripts/package.py"
   },
   "keywords": [
     "traffic-simulation",
@@ -24,6 +27,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "serve": "^14.2.4"
-  }
+    "tailwindcss": "3.4.17",
+    "chart.js": "4.4.8",
+    "lucide": "0.468.0"
+  },
+  "type": "module"
 }
